@@ -1,15 +1,91 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// --- Password protection: daily password is the current date (YYYYMMDD) ---
+const AUTH_SECRET = process.env.AUTH_SECRET || 'project-tracker-auth-secret';
+const COOKIE_NAME = 'pt_auth';
+const LOGIN_PATH = '/login';
+
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
 const DATA_DIR = process.env.DATA_DIR || __dirname;
 const DATA_FILE = path.join(DATA_DIR, 'data.json');
+
+// Helper: today's date as YYYYMMDD
+function getTodayPassword() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}${month}${day}`;
+}
+
+// Helper: signed token derived from today's password
+function generateAuthToken() {
+  const today = getTodayPassword();
+  return crypto.createHmac('sha256', AUTH_SECRET).update(today).digest('hex');
+}
+
+// Helper: parse cookies manually (no extra dependency needed)
+function parseCookies(req) {
+  const cookies = {};
+  const raw = req.headers.cookie;
+  if (!raw) return cookies;
+  raw.split(';').forEach(part => {
+    const [key, ...rest] = part.split('=');
+    if (!key) return;
+    cookies[key.trim()] = decodeURIComponent(rest.join('=').trim());
+  });
+  return cookies;
+}
+
+// Helper: check if request is authenticated for today
+function isAuthenticated(req) {
+  const cookies = parseCookies(req);
+  return cookies[COOKIE_NAME] === generateAuthToken();
+}
+
+// Helper: set the daily auth cookie
+function setAuthCookie(res) {
+  const token = generateAuthToken();
+  const isProd = process.env.NODE_ENV === 'production';
+  const secure = isProd ? 'Secure; ' : '';
+  res.setHeader('Set-Cookie', `${COOKIE_NAME}=${token}; HttpOnly; ${secure}Path=/; Max-Age=86400; SameSite=Lax`);
+}
+
+// --- Public login routes ---
+app.get(LOGIN_PATH, (req, res) => {
+  if (isAuthenticated(req)) {
+    return res.redirect('/');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.post(LOGIN_PATH, (req, res) => {
+  const { password } = req.body;
+  if (password && password === getTodayPassword()) {
+    setAuthCookie(res);
+    return res.redirect('/');
+  }
+  res.redirect(`${LOGIN_PATH}?error=1`);
+});
+
+// --- Auth gate for everything else ---
+app.use((req, res, next) => {
+  if (isAuthenticated(req)) {
+    return next();
+  }
+  res.redirect(LOGIN_PATH);
+});
+
+// --- Static files and app routes (protected) ---
+app.use(express.static(path.join(__dirname, 'public')));
 
 const DEFAULT_DATA = [
   {

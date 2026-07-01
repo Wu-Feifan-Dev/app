@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>请输入访问密码 - 项目计划进行表</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #4f6df5;
+    --primary-light: #eef1ff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+
+  .icon {
+    width: 64px;
+    height: 64px;
+    background: var(--primary-light);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  p.subtitle {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .form-group {
+    text-align: left;
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input[type="password"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.15);
+  }
+
+  button {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #3b58d8;
+  }
+
+  .error {
+    display: none;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .error.show {
+    display: block;
+  }
+
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🔒</div>
+    <h1>项目计划进行表</h1>
+    <p class="subtitle">此页面已加密，请输入密码继续访问</p>
+
+    <form action="/login" method="POST">
+      <div class="error" id="error">密码错误，请重新输入。</div>
+      <div class="form-group">
+        <label for="password">访问密码</label>
+        <input id="password" name="password" type="password" placeholder="请输入密码" autocomplete="off" required autofocus>
+      </div>
+      <button type="submit">进入系统</button>
+    </form>
+  </div>
+
+  <script>
+    // Show error message when ?error=1 is present
+    if (window.location.search.includes('error=1')) {
+      document.getElementById('error').classList.add('show');
+    }
+  </script>
+</body>
+</html>
