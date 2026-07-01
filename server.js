@@ -8,7 +8,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const DATA_FILE = path.join(__dirname, 'data.json');
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+const DATA_FILE = path.join(DATA_DIR, 'data.json');
 
 const DEFAULT_DATA = [
   {
@@ -90,6 +91,22 @@ app.delete('/api/items/:id', (req, res) => {
   data.items = data.items.filter(i => i.id !== id);
   writeData(data);
   res.json({ success: true });
+});
+
+// BULK IMPORT - restore data from backup
+app.post('/api/items/bulk', (req, res) => {
+  const incoming = req.body;
+  if (!Array.isArray(incoming)) {
+    return res.status(400).json({ error: 'Expected an array of items' });
+  }
+  const data = readData();
+  // Replace all items with imported data
+  data.items = incoming.map(item => ({
+    ...item,
+    id: item.id || Date.now() + Math.random()
+  }));
+  writeData(data);
+  res.json({ success: true, count: data.items.length });
 });
 
 // Serve index.html for all non-API routes
