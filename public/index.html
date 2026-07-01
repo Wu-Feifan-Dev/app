@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目计划进行表 - 证书需求追踪</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #4f6df5;
+    --primary-light: #eef1ff;
+    --green: #22c55e;
+    --green-bg: #f0fdf4;
+    --orange: #f59e0b;
+    --orange-bg: #fffbeb;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --gray: #64748b;
+    --gray-bg: #f8fafc;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --text-light: #94a3b8;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  /* ===== Sync Indicator ===== */
+  .sync-bar {
+    background: var(--green-bg);
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #16a34a;
+  }
+  .sync-bar .dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .sync-bar.syncing {
+    background: var(--orange-bg);
+    border-color: #fde68a;
+    color: #d97706;
+  }
+  .sync-bar.syncing .dot {
+    background: var(--orange);
+  }
+  .sync-bar.error {
+    background: var(--red-bg);
+    border-color: #fecaca;
+    color: #dc2626;
+  }
+  .sync-bar.error .dot {
+    background: var(--red);
+    animation: none;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header-left h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-left .subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+  .header-right {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #3b5de7; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,109,245,0.3); }
+  .btn-outline {
+    background: #fff;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+
+  /* ===== Stats ===== */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .stat-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .stat-info .num { font-size: 28px; font-weight: 700; line-height: 1; }
+  .stat-info .label { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+  /* ===== Toolbar ===== */
+  .toolbar {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 9px 14px 9px 38px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box input:focus { border-color: var(--primary); }
+  .search-box .icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 16px;
+  }
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--gray);
+  }
+  .filter-btn:hover { border-color: var(--primary); }
+  .filter-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ===== Table ===== */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead { background: var(--gray-bg); }
+  th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray);
+    white-space: nowrap;
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: 14px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tbody tr { transition: background 0.15s; }
+  tbody tr:hover { background: var(--primary-light); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr.flash { animation: rowFlash 0.6s ease; }
+  @keyframes rowFlash {
+    0% { background: #fef9c3; }
+    100% { background: transparent; }
+  }
+
+  .col-id { width: 50px; text-align: center; color: var(--text-light); font-weight: 600; }
+  .col-cert { min-width: 160px; }
+  .col-person { min-width: 100px; }
+  .col-time { min-width: 140px; }
+  .col-price { min-width: 130px; }
+  .col-vendor { min-width: 120px; }
+  .col-status { min-width: 110px; }
+  .col-updated { min-width: 140px; }
+  .col-actions { width: 110px; text-align: center; white-space: nowrap; }
+
+  .cert-name { font-weight: 600; }
+  .cert-desc { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+  /* Status badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .badge-green { background: var(--green-bg); color: #16a34a; }
+  .badge-green::before { background: var(--green); }
+  .badge-orange { background: var(--orange-bg); color: #d97706; }
+  .badge-orange::before { background: var(--orange); }
+  .badge-red { background: var(--red-bg); color: #dc2626; }
+  .badge-red::before { background: var(--red); }
+  .badge-gray { background: var(--gray-bg); color: var(--gray); }
+  .badge-gray::before { background: var(--gray); }
+  .badge-blue { background: var(--primary-light); color: var(--primary); }
+  .badge-blue::before { background: var(--primary); }
+
+  .price-tag {
+    font-weight: 700;
+    color: #1e293b;
+  }
+  .price-pending { color: var(--text-light); font-weight: 400; }
+
+  .time-cell { font-size: 13px; }
+  .time-cell .deadline { font-weight: 600; }
+  .time-cell .remaining { font-size: 12px; margin-top: 2px; }
+  .time-urgent { color: var(--red); }
+  .time-warning { color: var(--orange); }
+  .time-ok { color: var(--green); }
+
+  .action-btns { display: flex; gap: 6px; justify-content: center; }
+  .icon-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: all 0.15s;
+    color: var(--gray);
+  }
+  .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .icon-btn.delete:hover { border-color: var(--red); color: var(--red); }
+
+  .empty-row td {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+  }
+  .empty-row .big-icon { font-size: 48px; margin-bottom: 12px; }
+
+  .updated-cell { font-size: 12px; color: var(--text-light); }
+  .updated-cell .person { font-weight: 600; color: var(--text); }
+
+  /* ===== Modal ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-header {
+    padding: 24px 28px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h2 { font-size: 20px; font-weight: 700; }
+  .modal-close {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: var(--gray-bg);
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--red-bg); color: var(--red); }
+  .modal-body { padding: 0 28px 8px; }
+  .modal-footer {
+    padding: 16px 28px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .form-group label .required { color: var(--red); }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--primary); }
+  .form-group textarea { resize: vertical; min-height: 60px; }
+  .form-row { display: flex; gap: 16px; }
+  .form-row .form-group { flex: 1; }
+
+  .last-updater {
+    background: var(--primary-light);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .last-updater input {
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    color: var(--primary);
+    width: 120px;
+    outline: none;
+    border-bottom: 2px solid var(--primary);
+    padding: 2px 0;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1e293b;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    body { padding: 12px; }
+    .header { padding: 20px; }
+    .header-left h1 { font-size: 20px; }
+    .table-wrap { overflow-x: auto; }
+    th, td { padding: 10px 12px; font-size: 13px; }
+    .form-row { flex-direction: column; gap: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ===== Sync Indicator ===== -->
+  <div class="sync-bar" id="syncBar">
+    <div class="dot"></div>
+    <span id="syncText">已连接 · 数据自动同步 · 所有人共享同一份数据</span>
+  </div>
+
+  <!-- ===== Header ===== -->
+  <div class="header">
+    <div class="header-left">
+      <h1>📋 项目计划进行表</h1>
+      <div class="subtitle">证书需求追踪 · 时间与价格管理 · 团队实时协作</div>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-outline" onclick="exportCSV()">📥 导出CSV</button>
+      <button class="btn btn-primary" onclick="openModal()">➕ 添加项目</button>
+    </div>
+  </div>
+
+  <!-- ===== Stats ===== -->
+  <div class="stats" id="statsArea"></div>
+
+  <!-- ===== Toolbar ===== -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="搜索证书名称、负责人、单位名称…" oninput="renderTable()">
+    </div>
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">全部</button>
+      <button class="filter-btn" data-filter="未开始" onclick="setFilter('未开始')">未开始</button>
+      <button class="filter-btn" data-filter="进行中" onclick="setFilter('进行中')">进行中</button>
+      <button class="filter-btn" data-filter="已完成" onclick="setFilter('已完成')">已完成</button>
+      <button class="filter-btn" data-filter="已逾期" onclick="setFilter('已逾期')">已逾期</button>
+    </div>
+  </div>
+
+  <!-- ===== Table ===== -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th class="col-cert">证书名称</th>
+          <th class="col-person">负责人</th>
+          <th class="col-time">时间情况</th>
+          <th class="col-price">价格情况</th>
+          <th class="col-vendor">单位名称</th>
+          <th class="col-status">状态</th>
+          <th class="col-updated">更新人 / 时间</th>
+          <th class="col-actions">操作</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ===== Modal ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">添加项目</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <label>证书名称 <span class="required">*</span></label>
+        <input type="text" id="f_certName" placeholder="例：ISO 9001 质量管理体系认证">
+      </div>
+      <div class="form-group">
+        <label>证书描述 / 用途</label>
+        <input type="text" id="f_certDesc" placeholder="例：投标资质要求 / 客户准入要求">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>负责人 <span class="required">*</span></label>
+          <input type="text" id="f_person" placeholder="负责跟进人">
+        </div>
+        <div class="form-group">
+          <label>截止日期 <span class="required">*</span></label>
+          <input type="date" id="f_deadline">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>开始日期</label>
+          <input type="date" id="f_startDate">
+        </div>
+        <div class="form-group">
+          <label>预计完成日期</label>
+          <input type="date" id="f_expectedDate">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>预算价格（元）</label>
+          <input type="number" id="f_budget" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>实际价格（元）</label>
+          <input type="number" id="f_actualPrice" placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>单位名称</label>
+          <input type="text" id="f_vendor" placeholder="例：技术部 / 质量部 / 行政部">
+        </div>
+        <div class="form-group">
+          <label>状态 <span class="required">*</span></label>
+          <select id="f_status">
+            <option value="未开始">未开始</option>
+            <option value="进行中">进行中</option>
+            <option value="已完成">已完成</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>备注</label>
+        <textarea id="f_remark" placeholder="补充说明…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>本次更新人 <span class="required">*</span></label>
+        <div class="last-updater">
+          ✏️ <input type="text" id="f_updater" placeholder="你的名字">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveItem()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== Dual-Mode Data Layer =====
+// Mode 1 (Server): All users share the same data via Express backend API
+// Mode 2 (Offline): Falls back to localStorage — each browser has own data
+let items = [];
+let currentFilter = 'all';
+let editingId = null;
+let lastDataHash = '';
+let isServerMode = false; // will be detected on first fetch
+const STORAGE_KEY = 'project_cert_tracker_v1';
+
+const DEFAULT_DATA = [
+  {
+    id: 1, certName: 'ISO 9001 质量管理体系认证', certDesc: '投标资质要求',
+    person: '张明', deadline: '2026-08-15', startDate: '2026-07-01', expectedDate: '2026-08-10',
+    budget: 15000, actualPrice: null, vendor: '技术部', status: '进行中',
+    remark: '已提交初审材料，等待现场审核',
+    updater: '张明', updatedAt: '2026-07-01T14:00:00'
+  },
+  {
+    id: 2, certName: '信息安全管理体系认证 ISO 27001', certDesc: '客户准入要求',
+    person: '李芳', deadline: '2026-09-30', startDate: '', expectedDate: '2026-09-20',
+    budget: 30000, actualPrice: null, vendor: '质量部', status: '未开始',
+    remark: '待确认认证范围后启动',
+    updater: '李芳', updatedAt: '2026-07-01T14:00:00'
+  },
+  {
+    id: 3, certName: '高新技术企业认定', certDesc: '税收优惠 + 品牌资质',
+    person: '王强', deadline: '2026-06-30', startDate: '2026-05-01', expectedDate: '2026-06-25',
+    budget: 80000, actualPrice: 76000, vendor: '行政部', status: '已完成',
+    remark: '证书已下发，有效期三年',
+    updater: '王强', updatedAt: '2026-06-28T10:30:00'
+  }
+];
+
+// Remember updater name locally (just name, not data)
+function getMyName() {
+  return localStorage.getItem('my_tracker_name') || '';
+}
+function setMyName(name) {
+  localStorage.setItem('my_tracker_name', name);
+}
+
+// Sync status indicator
+function setSyncStatus(status, text) {
+  const bar = document.getElementById('syncBar');
+  const span = document.getElementById('syncText');
+  bar.className = 'sync-bar ' + status;
+  span.textContent = text;
+}
+
+// ===== Data Fetching (Dual Mode) =====
+async function fetchItems() {
+  if (isServerMode) {
+    try {
+      setSyncStatus('syncing', '正在同步数据…');
+      const res = await fetch('/api/items');
+      if (!res.ok) throw new Error('Server error');
+      const newItems = await res.json();
+      const newHash = JSON.stringify(newItems);
+      const changed = newHash !== lastDataHash;
+      lastDataHash = newHash;
+      items = newItems;
+      setSyncStatus('', '已连接服务器 · 数据自动同步 · 所有人共享同一份数据');
+      if (changed) {
+        renderAll();
+        const rows = document.querySelectorAll('tbody tr:not(.empty-row)');
+        rows.forEach(r => { r.classList.add('flash'); setTimeout(() => r.classList.remove('flash'), 700); });
+      }
+      return;
+    } catch (e) {
+      console.error('Fetch error:', e);
+      // Server went down, fall back to offline for this request
+      setSyncStatus('error', '服务器连接失败 · 当前使用本地数据（仅本浏览器可见）');
+      renderAll();
+      return;
+    }
+  }
+
+  // Offline mode: load from localStorage
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { items = JSON.parse(raw); }
+    else { items = DEFAULT_DATA; saveLocalData(); }
+  } catch (e) { items = DEFAULT_DATA; saveLocalData(); }
+  setSyncStatus('error', '本地模式 · 数据仅保存在本浏览器 · 需服务器才能多人共享');
+  renderAll();
+}
+
+function saveLocalData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+// ===== API Calls (Server Mode Only) =====
+async function apiCreate(data) {
+  const res = await fetch('/api/items', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+  });
+  return res.json();
+}
+async function apiUpdate(id, data) {
+  const res = await fetch('/api/items/' + id, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+  });
+  return res.json();
+}
+async function apiDelete(id) {
+  await fetch('/api/items/' + id, { method: 'DELETE' });
+  return { success: true };
+}
+
+// Auto-refresh every 5 seconds (server mode) to see others' changes
+setInterval(fetchItems, 5000);
+
+// ===== Detect Server Mode on Startup =====
+async function detectMode() {
+  try {
+    const res = await fetch('/api/items');
+    if (res.ok) {
+      isServerMode = true;
+      const newItems = await res.json();
+      lastDataHash = JSON.stringify(newItems);
+      items = newItems;
+      setSyncStatus('', '已连接服务器 · 数据自动同步 · 所有人共享同一份数据');
+      renderAll();
+      return;
+    }
+  } catch (e) {}
+  // No server — offline mode
+  isServerMode = false;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    items = raw ? JSON.parse(raw) : DEFAULT_DATA;
+    if (!raw) saveLocalData();
+  } catch (e) { items = DEFAULT_DATA; saveLocalData(); }
+  setSyncStatus('error', '本地模式 · 数据仅保存在本浏览器 · 需服务器才能多人共享');
+  renderAll();
+}
+
+// ===== Helpers =====
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatDateTime(dateStr) {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr);
+  return `${formatDate(dateStr)} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function getDaysRemaining(deadline) {
+  if (!deadline) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dl = new Date(deadline); dl.setHours(0,0,0,0);
+  return Math.ceil((dl - today) / (1000 * 60 * 60 * 24));
+}
+
+function getEffectiveStatus(item) {
+  if (item.status === '已完成') return '已完成';
+  if (item.status === '未开始' || item.status === '进行中') {
+    const days = getDaysRemaining(item.deadline);
+    if (days !== null && days < 0) return '已逾期';
+  }
+  return item.status;
+}
+
+function formatPrice(val) {
+  if (val === null || val === undefined || val === '') return '<span class="price-pending">待定</span>';
+  return `<span class="price-tag">¥${Number(val).toLocaleString('zh-CN')}</span>`;
+}
+
+function getStatusBadge(status) {
+  const map = { '未开始': 'badge-gray', '进行中': 'badge-blue', '已完成': 'badge-green', '已逾期': 'badge-red' };
+  const icons = { '未开始': '⚪', '进行中': '🔵', '已完成': '✅', '已逾期': '🔴' };
+  return `<span class="badge ${map[status] || 'badge-gray'}">${icons[status]||'⚪'} ${status}</span>`;
+}
+
+function getTimeCell(item) {
+  const days = getDaysRemaining(item.deadline);
+  let remainingText = '', remainingClass = 'time-ok';
+  if (days === null) { remainingText = '未设截止'; }
+  else if (days < 0) { remainingText = `已逾期 ${Math.abs(days)} 天`; remainingClass = 'time-urgent'; }
+  else if (days === 0) { remainingText = '今天截止'; remainingClass = 'time-urgent'; }
+  else if (days <= 7) { remainingText = `剩余 ${days} 天`; remainingClass = 'time-warning'; }
+  else { remainingText = `剩余 ${days} 天`; }
+  return `<div class="time-cell"><div class="deadline">📅 ${formatDate(item.deadline)}</div><div class="remaining ${remainingClass}">${remainingText}</div></div>`;
+}
+
+function getPriceCell(item) {
+  let parts = [];
+  if (item.budget) parts.push(`预算: ${formatPrice(item.budget)}`);
+  if (item.actualPrice) parts.push(`实际: ${formatPrice(item.actualPrice)}`);
+  if (parts.length === 0) return '<span class="price-pending">价格待定</span>';
+  return parts.join('<br>');
+}
+
+// ===== Render =====
+function renderStats() {
+  const total = items.length;
+  const inProgress = items.filter(i => getEffectiveStatus(i) === '进行中').length;
+  const done = items.filter(i => getEffectiveStatus(i) === '已完成').length;
+  const overdue = items.filter(i => getEffectiveStatus(i) === '已逾期').length;
+  const totalBudget = items.reduce((s, i) => s + (Number(i.budget)||0), 0);
+  const totalActual = items.reduce((s, i) => s + (Number(i.actualPrice)||0), 0);
+
+  const cards = [
+    { icon: '📊', bg: 'var(--primary-light)', color: 'var(--primary)', num: total, label: '项目总数' },
+    { icon: '🔄', bg: 'var(--primary-light)', color: 'var(--primary)', num: inProgress, label: '进行中' },
+    { icon: '✅', bg: 'var(--green-bg)', color: '#16a34a', num: done, label: '已完成' },
+    { icon: '🔴', bg: 'var(--red-bg)', color: '#dc2626', num: overdue, label: '已逾期' },
+    { icon: '💰', bg: 'var(--orange-bg)', color: '#d97706', num: '¥' + (totalActual || totalBudget).toLocaleString('zh-CN'), label: totalActual ? `实际花费 / 预算 ¥${totalBudget.toLocaleString('zh-CN')}` : `总预算` },
+  ];
+
+  document.getElementById('statsArea').innerHTML = cards.map(c => `
+    <div class="stat-card">
+      <div class="stat-icon" style="background:${c.bg};color:${c.color}">${c.icon}</div>
+      <div class="stat-info">
+        <div class="num" style="color:${c.color}">${c.num}</div>
+        <div class="label">${c.label}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  let filtered = items;
+  if (currentFilter !== 'all') filtered = filtered.filter(i => getEffectiveStatus(i) === currentFilter);
+  if (search) filtered = filtered.filter(i =>
+    (i.certName||'').toLowerCase().includes(search) || (i.person||'').toLowerCase().includes(search) ||
+    (i.vendor||'').toLowerCase().includes(search) || (i.certDesc||'').toLowerCase().includes(search)
+  );
+
+  const tbody = document.getElementById('tableBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="9"><div class="big-icon">📭</div><div>暂无数据，点击右上角「添加项目」开始记录</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map((item, idx) => {
+    const effStatus = getEffectiveStatus(item);
+    return `<tr>
+      <td class="col-id">${idx + 1}</td>
+      <td class="col-cert"><div class="cert-name">${item.certName || '—'}</div>${item.certDesc ? `<div class="cert-desc">${item.certDesc}</div>` : ''}</td>
+      <td>${item.person || '—'}</td>
+      <td>${getTimeCell(item)}</td>
+      <td>${getPriceCell(item)}</td>
+      <td>${item.vendor || '—'}</td>
+      <td>${getStatusBadge(effStatus)}</td>
+      <td class="updated-cell"><div><span class="person">${item.updater || '—'}</span></div><div>${formatDateTime(item.updatedAt)}</div></td>
+      <td class="col-actions"><div class="action-btns">
+        <button class="icon-btn" onclick="openModal(${item.id})" title="编辑">✏️</button>
+        <button class="icon-btn delete" onclick="deleteItem(${item.id})" title="删除">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAll() { renderStats(); renderTable(); }
+
+// ===== Filter =====
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.filter-btn[data-filter="${f}"]`).classList.add('active');
+  renderTable();
+}
+
+// ===== Modal =====
+function openModal(id) {
+  editingId = id || null;
+  const modal = document.getElementById('modalOverlay');
+  document.getElementById('modalTitle').textContent = id ? '编辑项目' : '添加项目';
+  if (id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    document.getElementById('editId').value = item.id;
+    document.getElementById('f_certName').value = item.certName || '';
+    document.getElementById('f_certDesc').value = item.certDesc || '';
+    document.getElementById('f_person').value = item.person || '';
+    document.getElementById('f_deadline').value = item.deadline || '';
+    document.getElementById('f_startDate').value = item.startDate || '';
+    document.getElementById('f_expectedDate').value = item.expectedDate || '';
+    document.getElementById('f_budget').value = item.budget || '';
+    document.getElementById('f_actualPrice').value = item.actualPrice || '';
+    document.getElementById('f_vendor').value = item.vendor || '';
+    document.getElementById('f_status').value = item.status || '未开始';
+    document.getElementById('f_remark').value = item.remark || '';
+    document.getElementById('f_updater').value = item.updater || '';
+  } else {
+    document.getElementById('editId').value = '';
+    document.querySelectorAll('.modal-body input, .modal-body textarea').forEach(el => {
+      if (el.id !== 'f_updater') el.value = '';
+    });
+    document.getElementById('f_status').value = '未开始';
+    const myName = getMyName();
+    if (myName) document.getElementById('f_updater').value = myName;
+  }
+  modal.classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+  editingId = null;
+}
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ===== Save (Dual Mode) =====
+async function saveItem() {
+  const certName = document.getElementById('f_certName').value.trim();
+  const person = document.getElementById('f_person').value.trim();
+  const deadline = document.getElementById('f_deadline').value;
+  const updater = document.getElementById('f_updater').value.trim();
+  if (!certName) { showToast('请填写证书名称'); return; }
+  if (!person) { showToast('请填写负责人'); return; }
+  if (!deadline) { showToast('请选择截止日期'); return; }
+  if (!updater) { showToast('请填写更新人姓名'); return; }
+  setMyName(updater);
+
+  const data = {
+    certName, certDesc: document.getElementById('f_certDesc').value.trim(), person, deadline,
+    startDate: document.getElementById('f_startDate').value,
+    expectedDate: document.getElementById('f_expectedDate').value,
+    budget: document.getElementById('f_budget').value || null,
+    actualPrice: document.getElementById('f_actualPrice').value || null,
+    vendor: document.getElementById('f_vendor').value.trim(),
+    status: document.getElementById('f_status').value,
+    remark: document.getElementById('f_remark').value.trim(),
+    updater, updatedAt: new Date().toISOString()
+  };
+
+  try {
+    if (isServerMode) {
+      if (editingId) { await apiUpdate(editingId, data); showToast('已更新项目信息'); }
+      else { await apiCreate(data); showToast('已添加新项目'); }
+      closeModal();
+      await fetchItems();
+    } else {
+      // Offline mode: save to localStorage
+      if (editingId) {
+        const idx = items.findIndex(i => i.id === editingId);
+        if (idx >= 0) items[idx] = { ...items[idx], ...data };
+        showToast('已更新项目信息');
+      } else {
+        data.id = Date.now();
+        items.push(data);
+        showToast('已添加新项目');
+      }
+      saveLocalData();
+      closeModal();
+      renderAll();
+    }
+  } catch (e) {
+    // Server call failed — fall back to offline
+    if (editingId) {
+      const idx = items.findIndex(i => i.id === editingId);
+      if (idx >= 0) items[idx] = { ...items[idx], ...data };
+      showToast('已更新（本地保存）');
+    } else {
+      data.id = Date.now();
+      items.push(data);
+      showToast('已添加（本地保存）');
+    }
+    saveLocalData();
+    closeModal();
+    renderAll();
+  }
+}
+
+// ===== Delete (Dual Mode) =====
+async function deleteItem(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  if (!confirm(`确定要删除「${item.certName}」吗？`)) return;
+  try {
+    if (isServerMode) { await apiDelete(id); showToast('已删除项目'); await fetchItems(); }
+    else { items = items.filter(i => i.id !== id); saveLocalData(); showToast('已删除项目'); renderAll(); }
+  } catch (e) {
+    items = items.filter(i => i.id !== id); saveLocalData(); showToast('已删除（本地）'); renderAll();
+  }
+}
+
+// ===== Export =====
+function exportCSV() {
+  const headers = ['序号', '证书名称', '描述', '负责人', '截止日期', '开始日期', '预计完成', '预算价格', '实际价格', '单位名称', '状态', '备注', '更新人', '更新时间'];
+  const rows = items.map((item, idx) => [
+    idx+1, item.certName||'', item.certDesc||'', item.person||'', formatDate(item.deadline),
+    formatDate(item.startDate), formatDate(item.expectedDate), item.budget||'', item.actualPrice||'',
+    item.vendor||'', getEffectiveStatus(item), item.remark||'', item.updater||'', formatDateTime(item.updatedAt)
+  ]);
+  let csv = '\uFEFF' + headers.join(',') + '\n';
+  rows.forEach(row => { csv += row.map(cell => { const s = String(cell); return s.includes(',')||s.includes('"') ? `"${s.replace(/"/g,'""')}"` : s; }).join(',') + '\n'; });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `项目计划进行表_${formatDate(new Date().toISOString())}.csv`;
+  link.click();
+  showToast('已导出CSV文件');
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg; toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ===== Init =====
+detectMode();
+</script>
+</body>
+</html>
