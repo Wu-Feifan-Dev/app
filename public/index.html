@@ -796,7 +796,10 @@ function getStatusBadge(status) {
 function getTimeCell(item) {
   const days = getDaysRemaining(item.deadline);
   let remainingText = '', remainingClass = 'time-ok';
-  if (days === null) { remainingText = '未设截止'; }
+  if (item.status === '已完成') {
+    remainingText = '已完成';
+    remainingClass = 'time-ok';
+  } else if (days === null) { remainingText = '未设截止'; }
   else if (days < 0) { remainingText = `已逾期 ${Math.abs(days)} 天`; remainingClass = 'time-urgent'; }
   else if (days === 0) { remainingText = '今天截止'; remainingClass = 'time-urgent'; }
   else if (days <= 7) { remainingText = `剩余 ${days} 天`; remainingClass = 'time-warning'; }
