@@ -579,6 +579,10 @@
           <label>实际价格（元）</label>
           <input type="number" id="f_actualPrice" placeholder="0" min="0">
         </div>
+        <div class="form-group">
+          <label>报价（元）</label>
+          <input type="number" id="f_quotePrice" placeholder="0" min="0">
+        </div>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -811,6 +815,7 @@ function getPriceCell(item) {
   let parts = [];
   if (item.budget) parts.push(`预算: ${formatPrice(item.budget)}`);
   if (item.actualPrice) parts.push(`实际: ${formatPrice(item.actualPrice)}`);
+  if (item.quotePrice) parts.push(`报价: ${formatPrice(item.quotePrice)}`);
   if (parts.length === 0) return '<span class="price-pending">价格待定</span>';
   return parts.join('<br>');
 }
@@ -903,6 +908,7 @@ function openModal(id) {
     document.getElementById('f_expectedDate').value = item.expectedDate || '';
     document.getElementById('f_budget').value = item.budget || '';
     document.getElementById('f_actualPrice').value = item.actualPrice || '';
+    document.getElementById('f_quotePrice').value = item.quotePrice || '';
     document.getElementById('f_vendor').value = item.vendor || '';
     document.getElementById('f_status').value = item.status || '未开始';
     document.getElementById('f_remark').value = item.remark || '';
@@ -945,6 +951,7 @@ async function saveItem() {
     expectedDate: document.getElementById('f_expectedDate').value,
     budget: document.getElementById('f_budget').value || null,
     actualPrice: document.getElementById('f_actualPrice').value || null,
+    quotePrice: document.getElementById('f_quotePrice').value || null,
     vendor: document.getElementById('f_vendor').value.trim(),
     status: document.getElementById('f_status').value,
     remark: document.getElementById('f_remark').value.trim(),
@@ -1004,10 +1011,10 @@ async function deleteItem(id) {
 
 // ===== Export =====
 function exportCSV() {
-  const headers = ['序号', '证书名称', '描述', '负责人', '截止日期', '开始日期', '预计完成', '预算价格', '实际价格', '单位名称', '状态', '备注', '更新人', '更新时间'];
+  const headers = ['序号', '证书名称', '描述', '负责人', '截止日期', '开始日期', '预计完成', '预算价格', '实际价格', '报价', '单位名称', '状态', '备注', '更新人', '更新时间'];
   const rows = items.map((item, idx) => [
     idx+1, item.certName||'', item.certDesc||'', item.person||'', formatDate(item.deadline),
-    formatDate(item.startDate), formatDate(item.expectedDate), item.budget||'', item.actualPrice||'',
+    formatDate(item.startDate), formatDate(item.expectedDate), item.budget||'', item.actualPrice||'', item.quotePrice||'',
     item.vendor||'', getEffectiveStatus(item), item.remark||'', item.updater||'', formatDateTime(item.updatedAt)
   ]);
   let csv = '\uFEFF' + headers.join(',') + '\n';
