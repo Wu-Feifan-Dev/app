@@ -103,38 +103,6 @@
       "quotePrice": "7000"
     },
     {
-      "certName": "二级机电带AB+机电中工 补缴",
-      "certDesc": "项目",
-      "person": "张瑞娟",
-      "deadline": "2026-07-03",
-      "startDate": "2026-07-01",
-      "expectedDate": "",
-      "budget": "9000",
-      "actualPrice": null,
-      "vendor": "宁波单位",
-      "status": "进行中",
-      "remark": "",
-      "updater": "张瑞娟",
-      "updatedAt": "2026-07-01T09:11:10.126Z",
-      "id": 1782956011356
-    },
-    {
-      "certName": "助工带A 唯一 补缴",
-      "certDesc": "项目",
-      "person": "张瑞娟",
-      "deadline": "2026-07-03",
-      "startDate": "2026-07-01",
-      "expectedDate": "",
-      "budget": null,
-      "actualPrice": null,
-      "vendor": "宁波单位",
-      "status": "未开始",
-      "remark": "",
-      "updater": "张瑞娟",
-      "updatedAt": "2026-07-01T09:13:02.961Z",
-      "id": 1782956012110
-    },
-    {
       "certName": "一级房建带B建筑高工",
       "certDesc": "项目",
       "person": "张瑞娟",
