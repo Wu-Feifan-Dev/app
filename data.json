@@ -1,23 +1,6 @@
 {
   "items": [
     {
-      "certName": "一级房建 b 退休 一年",
-      "certDesc": "招投标",
-      "person": "吴非凡",
-      "deadline": "2026-07-01",
-      "startDate": "2026-07-01",
-      "expectedDate": "2026-07-01",
-      "budget": "11500",
-      "actualPrice": "11500",
-      "vendor": "浙江唐名建设有限公司",
-      "status": "已完成",
-      "remark": "已提交初审材料，等待现场审核\n唐名需要两本一级房建退休，和职称带A退休。总预算18000",
-      "updater": "吴非凡",
-      "updatedAt": "2026-07-02T01:35:22.396Z",
-      "id": 1782956003863,
-      "quotePrice": "12500"
-    },
-    {
       "certName": "房建中工 退休 带 A",
       "certDesc": "技术负责人",
       "person": "徐梦莹",
