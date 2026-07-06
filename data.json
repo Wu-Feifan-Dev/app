@@ -166,6 +166,23 @@
       "updater": "张瑞娟",
       "updatedAt": "2026-07-01T09:13:02.961Z",
       "id": 1783320139981
+    },
+    {
+      "certName": "地质灾害助工，中工，高工",
+      "certDesc": "批地质灾害，半年",
+      "person": "全体",
+      "deadline": "2026-07-25",
+      "startDate": "2026-06-20",
+      "expectedDate": "2026-07-15",
+      "budget": null,
+      "actualPrice": null,
+      "quotePrice": null,
+      "vendor": "",
+      "status": "进行中",
+      "remark": "",
+      "updater": "吴非凡",
+      "updatedAt": "2026-07-06T07:44:47.951Z",
+      "id": 1783323894785
     }
   ]
 }
