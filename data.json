@@ -134,6 +134,23 @@
       "updater": "张鑫岩 吴非凡 张瑞娟 徐梦莹",
       "updatedAt": "2026-07-07T02:02:21.935Z",
       "id": 1783389712596
+    },
+    {
+      "certName": "注册安全工程师",
+      "certDesc": "配合出场四川 西藏",
+      "person": "吴非凡",
+      "deadline": "2026-07-10",
+      "startDate": "2026-07-08",
+      "expectedDate": "2026-07-10",
+      "budget": null,
+      "actualPrice": null,
+      "quotePrice": null,
+      "vendor": "四川单位",
+      "status": "进行中",
+      "remark": "",
+      "updater": "张鑫岩 吴非凡 张瑞娟 徐梦莹",
+      "updatedAt": "2026-07-08T06:09:50.176Z",
+      "id": 1783490991526
     }
   ]
 }
