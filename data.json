@@ -3,7 +3,7 @@
     {
       "certName": "房建中工 退休 带 A",
       "certDesc": "技术负责人",
-      "person": "徐梦莹",
+      "person": "全体",
       "deadline": "2026-07-02",
       "startDate": "2026-07-01",
       "expectedDate": "2026-07-01",
@@ -11,9 +11,9 @@
       "actualPrice": "5500",
       "vendor": "浙江唐名建设有限公司",
       "status": "进行中",
-      "remark": "待确认",
-      "updater": "徐梦莹",
-      "updatedAt": "2026-07-02T01:36:09.411Z",
+      "remark": "紧急紧急",
+      "updater": "吴非凡",
+      "updatedAt": "2026-07-13T02:26:05.588Z",
       "id": 1783320070599,
       "quotePrice": "5500"
     },
@@ -119,23 +119,6 @@
       "id": 1783389712596
     },
     {
-      "certName": "注册安全工程师",
-      "certDesc": "配合出场四川 西藏",
-      "person": "吴非凡",
-      "deadline": "2026-07-10",
-      "startDate": "2026-07-08",
-      "expectedDate": "2026-07-10",
-      "budget": null,
-      "actualPrice": null,
-      "quotePrice": null,
-      "vendor": "四川单位",
-      "status": "进行中",
-      "remark": "",
-      "updater": "张鑫岩 吴非凡 张瑞娟 徐梦莹",
-      "updatedAt": "2026-07-08T06:09:50.176Z",
-      "id": 1783490991526
-    },
-    {
       "certName": "建筑施工带a",
       "certDesc": "半年签",
       "person": "吴非凡",
@@ -143,14 +126,48 @@
       "startDate": "2026-07-08",
       "expectedDate": "2026-07-09",
       "budget": "3500",
+      "actualPrice": "5000",
+      "quotePrice": "4500",
+      "vendor": "",
+      "status": "已完成",
+      "remark": "",
+      "updater": "吴非凡",
+      "updatedAt": "2026-07-13T02:24:32.678Z",
+      "id": 1783563772727
+    },
+    {
+      "certName": "注册房建",
+      "certDesc": "一年，挂章",
+      "person": "吴非凡",
+      "deadline": "2026-07-14",
+      "startDate": "2026-07-01",
+      "expectedDate": "2026-07-14",
+      "budget": "43000",
       "actualPrice": null,
       "quotePrice": null,
-      "vendor": "",
+      "vendor": "嘉兴设计单位",
       "status": "进行中",
       "remark": "",
       "updater": "吴非凡",
-      "updatedAt": "2026-07-09T02:22:54.636Z",
-      "id": 1783563772727
+      "updatedAt": "2026-07-10T08:37:56.822Z",
+      "id": 1783672676967
+    },
+    {
+      "certName": "注册给排水",
+      "certDesc": "一年，挂章",
+      "person": "吴非凡",
+      "deadline": "2026-07-14",
+      "startDate": "2026-07-01",
+      "expectedDate": "2026-07-14",
+      "budget": "43000",
+      "actualPrice": null,
+      "quotePrice": null,
+      "vendor": "嘉兴设计单位",
+      "status": "未开始",
+      "remark": "",
+      "updater": "吴非凡",
+      "updatedAt": "2026-07-10T08:38:46.258Z",
+      "id": 1783672691191
     }
   ]
 }
