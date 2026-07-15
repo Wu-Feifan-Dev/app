@@ -1,9 +1,9 @@
 {
   "items": [
     {
-      "certName": "房建中工 退休 带 A",
+      "certName": "房建相关中工 退休 带 A",
       "certDesc": "技术负责人",
-      "person": "徐梦莹",
+      "person": "全体",
       "deadline": "2026-07-17",
       "startDate": "2026-07-01",
       "expectedDate": "2026-07-01",
@@ -13,12 +13,12 @@
       "status": "进行中",
       "remark": "待确认",
       "updater": "张鑫岩 吴非凡 张瑞娟 徐梦莹",
-      "updatedAt": "2026-07-13T06:54:05.065Z",
+      "updatedAt": "2026-07-13T07:31:08.983Z",
       "id": 1782895625708,
       "quotePrice": null
     },
     {
-      "certName": "电气中工",
+      "certName": "电气中工，机械中工",
       "certDesc": "增项",
       "person": "张瑞娟",
       "deadline": "2026-07-17",
@@ -30,25 +30,8 @@
       "status": "进行中",
       "remark": "以确定。",
       "updater": "张鑫岩 吴非凡 张瑞娟 徐梦莹",
-      "updatedAt": "2026-07-13T06:53:59.395Z",
+      "updatedAt": "2026-07-15T02:03:11.302Z",
       "id": 1782895691890,
-      "quotePrice": null
-    },
-    {
-      "certName": "一级房建带B建筑高工",
-      "certDesc": "项目",
-      "person": "张瑞娟",
-      "deadline": "2026-07-20",
-      "startDate": "2026-07-01",
-      "expectedDate": "",
-      "budget": "15000",
-      "actualPrice": null,
-      "vendor": "温州单位",
-      "status": "进行中",
-      "remark": "",
-      "updater": "张鑫岩 吴非凡 张瑞娟 徐梦莹",
-      "updatedAt": "2026-07-13T06:53:55.147Z",
-      "id": 1782897030574,
       "quotePrice": null
     },
     {
@@ -67,6 +50,23 @@
       "updater": "张鑫岩 吴非凡 张瑞娟 徐梦莹",
       "updatedAt": "2026-07-13T06:53:03.117Z",
       "id": 1783925588101
+    },
+    {
+      "certName": "机械电气电力高工",
+      "certDesc": "社保唯一，一年签。安徽芜湖单位",
+      "person": "吴非凡",
+      "deadline": "2026-07-17",
+      "startDate": "2026-07-15",
+      "expectedDate": "2026-07-17",
+      "budget": "18000",
+      "actualPrice": null,
+      "quotePrice": "22000",
+      "vendor": "安徽芜湖",
+      "status": "进行中",
+      "remark": "",
+      "updater": "瑞张鑫岩 吴非凡 张娟 徐梦莹",
+      "updatedAt": "2026-07-15T02:02:51.272Z",
+      "id": 1784080968282
     }
   ]
 }
