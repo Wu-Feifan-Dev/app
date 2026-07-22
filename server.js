@@ -17,12 +17,14 @@ app.use(express.urlencoded({ extended: true }));
 const DATA_DIR = process.env.DATA_DIR || __dirname;
 const DATA_FILE = path.join(DATA_DIR, 'data.json');
 
-// Helper: today's date as YYYYMMDD
+// Helper: today's date as YYYYMMDD (China timezone GMT+8)
 function getTodayPassword() {
   const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
+  // Convert to China time (GMT+8)
+  const chinaTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  const year = chinaTime.getUTCFullYear();
+  const month = String(chinaTime.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(chinaTime.getUTCDate()).padStart(2, '0');
   return `${year}${month}${day}`;
 }
 
